@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body,#root {
+  min-height: 100%;
+  width: 100%;
+}
+
+:root {
+
+  /*borders*/
+  --border-radius-md: 7px;
+
+
+  /*TODO Colors*/
+
+  /*Grey*/
+  --color-grey-0: #fff;
+  --color-grey-50: #f9fafb;
+  --color-grey-100: #f3f4f6;
+
+
+/*  Red*/
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+
+
+}
