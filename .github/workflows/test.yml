@@ -11,7 +11,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Lint
-        run: echo "Linting the Project...."
+        run: echo Linting the Project...."
       - name: Final Stage of Lint
         run: echo "Linting the Project...."
   test:
