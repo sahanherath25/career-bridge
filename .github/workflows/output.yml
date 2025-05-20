@@ -1,0 +1,8 @@
+name: Output Metadata
+on: issues
+jobs:
+  Issues-Occured:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Issue is Occured
+        run: echo "${{toJSON(github)}}"
