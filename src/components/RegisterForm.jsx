@@ -6,6 +6,10 @@ import {useForm} from "react-hook-form";
 import FormButton from "../ui/FormButton.jsx";
 import FormTitle from "../ui/FormTitle.jsx";
 import StyledLink from "../ui/StyledLink.jsx";
+import {useMutation} from "@tanstack/react-query";
+import {registerUser} from "../utils/useUsers.js";
+import toast from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
 
 const StyledFormWrapper = styled.div`
     grid-column: 4 / 10;
@@ -37,18 +41,61 @@ const BottomWrapper=styled.div`
 
 function RegisterForm({title="Register"}) {
 
+    const navigate=  useNavigate();
 
-    const {register, formState, handleSubmit} = useForm()
+
+    const {reset,register, formState, handleSubmit,watch} = useForm()
+
+    const {mutate:registerNewUser,isPending}=useMutation({
+        mutationFn:(user)=>{
+            toast.loading("Please Wait ",{id:"form"})
+            return registerUser(user)
+        },
+        onError:(e)=>{
+            console.log("ERROE ON FRONTEND ",e.response.data.message)
+
+            const{message}=e.response.data
+            toast.error(message,{id:"form"})
+        }
+        ,onSuccess:(data)=>{
+            console.log("Register User is ,",data)
+            toast.success(data.message,{id:"form"})
+            localStorage.setItem("token",JSON.stringify(data.token))
+            // reset()
+            navigate("/")
+
+        }
+    })
 
     const {errors} = formState
 
     console.log("ERROR ",errors)
+    console.log("Status  ",isPending)
 
     const onFormSubmit = (data) => {
         console.log("Form Data ", data)
+
+        registerNewUser(data)
+
     }
 
-    const onErrorSubmit = (data) => {
+    const onErrorSubmit = (errors) => {
+
+        if(errors.password){
+            toast.error(errors.password.message,{id:"form"})
+        }
+
+        if(errors.confirmPassword){
+            toast.error(errors.confirmPassword.message,{id:"form"})
+        }
+
+        if(errors.firstName){
+            toast.error(errors.firstName.message,{id:"form"})
+        }
+
+        if(errors.lastName){
+            toast.error(errors.lastName.message,{id:"form"})
+        }
 
     }
 
@@ -58,13 +105,25 @@ function RegisterForm({title="Register"}) {
 
                 <FormTitle>{title}</FormTitle>
 
-                <FormRow  error={errors?.email?.message} label={"First Name"}>
+                <FormRow  error={errors?.firstName?.message} label={"First Name"}>
                     <FormInput
-                        type={"text"} id={"name"}
-                        name={"name"}
-                        {...register("name",
+                        type={"text"} id={"firstName"}
+                        name={"firstName"}
+                        {...register("firstName",
                             {
-                                required: "name is required",
+                                required: "First Name is required",
+                            })
+                        }
+                    />
+                </FormRow>
+
+                <FormRow  error={errors?.lastName?.message} label={"Last Name"}>
+                    <FormInput
+                        type={"text"} id={"lastName"}
+                        name={"lastName"}
+                        {...register("lastName",
+                            {
+                                required: "Last Name is required",
                             })
                         }
                     />
@@ -88,12 +147,30 @@ function RegisterForm({title="Register"}) {
                         name={"password"}
                         {...register("password",
                             {
-                                required: "Password is Required",
+                                required: "Password is Required ",
 
                             })
                         }
                     />
                 </FormRow>
+
+                <FormRow  error={errors?.confirmPassword?.message} label={"Confirm Password"}>
+                    <FormInput
+                        type={"password"} id={"confirmPassword"}
+                        name={"confirmPassword"}
+                        {...register("confirmPassword",
+                            {
+                                required: "Re enter the password to confirm",
+                                validate:(value)=>{
+                                    return  value === watch("password") || "Passwords do not match"
+                                }
+
+
+                            })
+                        }
+                    />
+                </FormRow>
+
                 <FormButton type={"submit"} color={"#FFF5E4"}>Register</FormButton>
 
                 <BottomWrapper>

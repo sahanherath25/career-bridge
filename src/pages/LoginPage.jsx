@@ -1,10 +1,9 @@
 import React from 'react';
-
-import Form from "../components/Form.jsx"
+import LoginForm from "../components/Form.jsx";
 
 function LoginPage() {
  return (
-   <Form title={"Login "}  />
+   <LoginForm title={"Login "}  />
  );
 }
 

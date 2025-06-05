@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import * as keyframes from "../styles/keyframes.js"
 import ImagePicker from "../components/ImagePicker.jsx";
+import IntroSection from "../components/IntroSection.jsx";
 
 const LeftContainer = styled.div`
     grid-column: 1/7;
@@ -94,8 +95,6 @@ function HomePage() {
                     src="https://images.unsplash.com/photo-1635350736475-c8cef4b21906?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt=""/>
             </RightContainer>
-
-
 
 
         </>

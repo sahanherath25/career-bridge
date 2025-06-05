@@ -7,6 +7,8 @@ import FormButton from "../ui/FormButton.jsx";
 import FormTitle from "../ui/FormTitle.jsx";
 import {Link} from "react-router-dom";
 import StyledLink from "../ui/StyledLink.jsx";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {verifyLoginUser} from "../utils/useUsers.js";
 
 const StyledFormWrapper = styled.div`
     grid-column: 4 / 10;
@@ -36,10 +38,21 @@ const BottomWrapper=styled.div`
 
 
 
-function Form({title="Login"}) {
+function LoginForm({title="Login"}) {
 
 
     const {register, formState, handleSubmit} = useForm()
+
+    const {mutate:loginUser,error}=useMutation({
+        mutationFn:(user)=>verifyLoginUser(user),
+        onError:(e)=>{
+            console.log("Error ",e)
+        },
+        onSuccess:(data)=>{
+            console.log("DAta received ",data)
+        }
+
+    })
 
     const {errors} = formState
 
@@ -47,6 +60,8 @@ function Form({title="Login"}) {
 
     const onFormSubmit = (data) => {
         console.log("Form Data ", data)
+        loginUser(data)
+
     }
 
     const onErrorSubmit = (data) => {
@@ -94,4 +109,4 @@ function Form({title="Login"}) {
     );
 }
 
-export default Form;
+export default LoginForm;
