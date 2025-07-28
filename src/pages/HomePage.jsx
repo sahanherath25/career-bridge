@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
 
 import * as keyframes from "../styles/keyframes.js"
 import ImagePicker from "../components/ImagePicker.jsx";
 import IntroSection from "../components/IntroSection.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {Link, useNavigate} from "react-router-dom";
+import {addUserToken} from "../features/users/userSlice.js";
 
 const LeftContainer = styled.div`
     grid-column: 1/7;
@@ -24,13 +27,14 @@ const Image = styled.img`
     object-fit: cover;
 `
 
-const StyledButton = styled.button`
-
+const StyledButton = styled(Link)`
+    
+    display: inline-block;
     background-color: #b10101;
     color: #ffffff;
     padding: 0.75rem 1.75rem;
     border: none;
-    border-radius: 999px;
+    border-radius: 99px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -58,16 +62,33 @@ const H2 = styled.h2`
 `
 
 
-const P=styled.p`
+const P = styled.p`
     font-size: 1.05rem;
     line-height: 1.6;
     color: #374151;
     margin-bottom: 16px;
-    
-    
+
+
 `
 
 function HomePage() {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+
+        const storedToken = localStorage.getItem("token");
+        if (storedToken) {
+            dispatch(addUserToken(storedToken))
+        } else {
+            navigate("/login");
+        }
+
+
+    }, []);
+
+
     return (
         <>
             <LeftContainer>
@@ -81,7 +102,7 @@ function HomePage() {
                     JobPost today and take the next step in your hiring or job search journey.
                 </P>
 
-                <StyledButton>
+                <StyledButton to={"/dashboard"} >
                     Get Started
                 </StyledButton>
 

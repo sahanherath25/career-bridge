@@ -5,10 +5,13 @@ import FormInput from "../ui/FormInput.jsx";
 import {useForm} from "react-hook-form";
 import FormButton from "../ui/FormButton.jsx";
 import FormTitle from "../ui/FormTitle.jsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import StyledLink from "../ui/StyledLink.jsx";
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 import {verifyLoginUser} from "../utils/useUsers.js";
+import toast from "react-hot-toast";
+import {useDispatch} from "react-redux";
+import {addUserToken,showAlert,hideAlert} from "../features/users/userSlice.js";
 
 const StyledFormWrapper = styled.div`
     grid-column: 4 / 10;
@@ -41,17 +44,44 @@ const BottomWrapper=styled.div`
 function LoginForm({title="Login"}) {
 
 
+    const dispatch=useDispatch();
+
+    const navigate=useNavigate();
+
     const {register, formState, handleSubmit} = useForm()
 
     const {mutate:loginUser,error}=useMutation({
         mutationFn:(user)=>verifyLoginUser(user),
         onError:(e)=>{
             console.log("Error ",e)
+            if(e.code==="ERR_BAD_REQUEST"){
+                toast.error(`${e.response.data.message}`,
+                    {id:"login",
+                        style:{border: '1px solid #f44336', padding: '16px', color: 'red'},
+                        iconTheme:{
+                            primary: '#f44336',
+                            secondary: '#ffebee',
+                        }
+                    })
+            }else {
+                toast.error("Something Went Wrong",{id:"login"})
+            }
         },
         onSuccess:(data)=>{
-            console.log("DAta received ",data)
-        }
 
+            // console.log("Data received ",data)
+            const generatedToken=data.token
+            localStorage.setItem("token",generatedToken)
+            dispatch(showAlert())
+            toast.loading("Please Wait...",{id:"login"})
+            dispatch(addUserToken(generatedToken))
+            dispatch(hideAlert())
+            navigate("/")
+            toast.success("Login Success",{id:"login"})
+        },
+        onSettled:(data)=>{
+
+        }
     })
 
     const {errors} = formState
@@ -60,6 +90,7 @@ function LoginForm({title="Login"}) {
 
     const onFormSubmit = (data) => {
         console.log("Form Data ", data)
+        toast.loading("Please Wait...",{id:"login"})
         loginUser(data)
 
     }

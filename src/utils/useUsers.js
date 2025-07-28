@@ -22,6 +22,5 @@ export const verifyLoginUser= async (user)=>{
 
     console.log(response.data)
     return response.data;
-
-
 }
+

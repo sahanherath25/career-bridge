@@ -13,13 +13,15 @@ const StyledAppLayout=styled.div`
 
 
 const Main=styled.div`
-
     width: 100%;
     flex-grow: 1;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    align-items: center;
-    justify-items: center;
+    //justify-items: center;
+    //align-items: center;
+    
+    //justify-content: center;
+    //align-content: center; 
 `
 
 function AppLayout() {
@@ -31,7 +33,7 @@ function AppLayout() {
       <Main>
           <Outlet/>
       </Main>
-      <Footer/>
+      {/*<Footer/>*/}
 
   </StyledAppLayout>
  );}
